@@ -56,20 +56,25 @@ export default function Home() {
           {favorites.length === 0 ? (
             <span className="small">No favorites yet. Search a city and press "Save".</span>
           ) : (
-            favorites.map((f) => (
-              <div key={f} className="row">
-                <button className="fav" onClick={() => fetchWeather(f)} aria-label={`Search ${f}`}>
-                  {f}
-                </button>
-                <button
-                  className="button ghost"
-                  onClick={() => removeFavorite(f)}
-                  aria-label={`Remove ${f} from favorites`}
-                >
-                  Remove
-                </button>
-              </div>
-            ))
+            favorites.map((f) => {
+              const label =
+                typeof f === "string" ? f : f?.label || [f?.name, f?.admin1, f?.country].filter(Boolean).join(", ")
+              const key = typeof f === "string" ? f : f?.key || label
+              return (
+                <div key={key} className="row">
+                  <button className="fav" onClick={() => fetchWeather(f)} aria-label={`Search ${label}`}>
+                    {label}
+                  </button>
+                  <button
+                    className="button ghost"
+                    onClick={() => removeFavorite(f)}
+                    aria-label={`Remove ${label} from favorites`}
+                  >
+                    Remove
+                  </button>
+                </div>
+              )
+            })
           )}
         </div>
       </section>

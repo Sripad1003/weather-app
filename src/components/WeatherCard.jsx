@@ -17,7 +17,7 @@ export default function WeatherCard({ location, current, onFavorite }) {
           </div>
         </div>
         {onFavorite ? (
-          <button className="favorite-btn" onClick={onFavorite} aria-label="Save city to favorites">
+          <button className="favorite-btn border-green-700" onClick={onFavorite} aria-label="Save city to favorites">
             ★ Save
           </button>
         ) : null}

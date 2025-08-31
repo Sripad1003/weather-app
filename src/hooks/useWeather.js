@@ -15,13 +15,26 @@ export function useWeather() {
 
   const [favorites, setFavorites] = useState([])
 
-  // Load favorites from localStorage
   useEffect(() => {
     try {
       const raw = localStorage.getItem("weather:favorites")
-      if (raw) setFavorites(JSON.parse(raw))
+      if (!raw) return
+      const parsed = JSON.parse(raw)
+      if (!Array.isArray(parsed)) return
+      const normalized = parsed.map((item) => {
+        if (typeof item === "string") {
+          // legacy entry: only label/key
+          return { key: item, label: item }
+        }
+        // ensure key + label exist
+        const label = item?.label || [item?.name, item?.admin1, item?.country].filter(Boolean).join(", ")
+        const key = item?.key || label
+        return { ...item, key, label }
+      })
+      setFavorites(normalized)
     } catch {}
   }, [])
+
   const saveFavorites = useCallback((list) => {
     setFavorites(list)
     try {
@@ -31,27 +44,64 @@ export function useWeather() {
 
   const addFavorite = useCallback(() => {
     if (!location?.name) return
-    const key = [location.name, location.admin1, location.country].filter(Boolean).join(", ")
-    if (favorites.includes(key)) return
-    const next = [...favorites, key].slice(0, 12)
+    const label = [location.name, location.admin1, location.country].filter(Boolean).join(", ")
+    const key = label
+    const newFav = {
+      key,
+      label,
+      name: location.name,
+      admin1: location.admin1,
+      country: location.country,
+      latitude: location.latitude,
+      longitude: location.longitude,
+    }
+    const exists = favorites.some((f) => (f?.key || f) === key)
+    if (exists) return
+    const next = [...favorites, newFav].slice(0, 12)
     saveFavorites(next)
   }, [favorites, location, saveFavorites])
 
   const removeFavorite = useCallback(
-    (key) => {
-      const next = favorites.filter((f) => f !== key)
+    (item) => {
+      const k =
+        typeof item === "string"
+          ? item
+          : item?.key || [item?.name, item?.admin1, item?.country].filter(Boolean).join(", ")
+      const next = favorites.filter((f) => (typeof f === "string" ? f !== k : f?.key !== k))
       saveFavorites(next)
     },
     [favorites, saveFavorites],
   )
 
-  const fetchWeather = useCallback(async (city) => {
+  const fetchWeather = useCallback(async (cityOrFav) => {
     setError("")
     setLoading(true)
     setSummary("")
     setForecastText("")
     try {
-      const geo = await geocodeCity(city)
+      let geo
+
+      // If object favorite with coordinates, use directly
+      if (cityOrFav && typeof cityOrFav === "object") {
+        const fav = cityOrFav
+        if (typeof fav.latitude === "number" && typeof fav.longitude === "number") {
+          geo = {
+            name: fav.name || fav.label || "Selected",
+            admin1: fav.admin1,
+            country: fav.country,
+            latitude: fav.latitude,
+            longitude: fav.longitude,
+          }
+        } else {
+          // No coords on favorite (legacy) -> geocode by best available label/name
+          const query = fav.name || fav.label || [fav.name, fav.admin1, fav.country].filter(Boolean).join(", ")
+          geo = await geocodeCity(query)
+        }
+      } else {
+        // String city name
+        geo = await geocodeCity(String(cityOrFav || "").trim())
+      }
+
       setLocation(geo)
       const [cur, days] = await Promise.all([
         getCurrentWeather(geo.latitude, geo.longitude),
