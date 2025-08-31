@@ -8,6 +8,7 @@ import ErrorMessage from "../components/ErrorMessage.jsx"
 import WeatherDetails from "../components/WeatherDetails.jsx"
 import { useWeather } from "../hooks/useWeather.js"
 import Logo from "../components/Logo.jsx"
+import CityChat from "../components/CityChat.jsx"
 
 export default function Home() {
   const [
@@ -100,6 +101,18 @@ export default function Home() {
             <span aria-hidden>📅</span> <span>3-Day Forecast</span>
           </div>
           <pre style={{ marginTop: 10, whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{forecastText}</pre>
+        </section>
+      ) : null}
+
+      {/* City-specific chat assistant */}
+      {location ? (
+        <section className="card section" style={{ marginTop: 16 }} aria-label="City chat">
+          <CityChat
+            cityLabel={[location?.name, location?.admin1, location?.country].filter(Boolean).join(", ")}
+            cityObj={location}
+            weather={current}
+            forecast={daily}
+          />
         </section>
       ) : null}
 
