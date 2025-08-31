@@ -9,6 +9,8 @@ import WeatherDetails from "../components/WeatherDetails.jsx"
 import { useWeather } from "../hooks/useWeather.js"
 import Logo from "../components/Logo.jsx"
 import CityChat from "../components/CityChat.jsx"
+// import Feedback from "../components/Feedback.jsx"
+
 export default function Home() {
   const [
     { loading, location, current, daily, summary, forecastText, error, favorites, hourly, dailyDetail },
@@ -124,6 +126,37 @@ export default function Home() {
         daily={dailyDetail}
         timezone={current?.timezone}
       />
+
+      {/* About section */}
+      <section className="card section" style={{ marginTop: 16 }} aria-label="About">
+        <div className="badge">
+          <span aria-hidden>ℹ️</span> <span>About Weather Now</span>
+        </div>
+        <p style={{ marginTop: 10, lineHeight: 1.6 }}>
+          Weather Now is your go-to app for real-time weather updates, forecasts, and insights. Search for any city to get detailed weather information, save your favorite locations, and plan your day with confidence. 
+          <br />
+          Powered by advanced weather APIs and AI-driven summaries.
+        </p>
+      </section>
+
+      {/* Contact section */}
+      <section className="card section" style={{ marginTop: 16 }} aria-label="Contact">
+        <div className="badge">
+          <span aria-hidden>📧</span> <span>Contact Us</span>
+        </div>
+        <p style={{ marginTop: 10, lineHeight: 1.6 }}>
+          Have questions or feedback? Reach out to us at <a href="mailto:chiliverysripad@gmail.com" style={{ color: "#007bff" }}>chiliverysripad@gmail.com</a>. We're here to help!
+        </p>
+      </section>
+
+
+      {/* <Feedback /> */}
+      <footer className="footer" style={{ marginTop: 32, textAlign: "center", padding: "16px", borderTop: "1px solid #e0e0e0" }}>
+        <p style={{ margin: 0, fontSize: "14px", color: "#666" }}>
+          © 2025 Weather Now. All rights reserved.
+        </p>
+      </footer>
+
 
     </main>
   )
