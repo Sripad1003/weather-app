@@ -6,7 +6,6 @@ import WeatherCard from "../components/WeatherCard.jsx"
 import WeatherSummary from "../components/WeatherSummary.jsx"
 import ErrorMessage from "../components/ErrorMessage.jsx"
 import { useWeather } from "../hooks/useWeather.js"
-import VoiceAssistant from "../components/VoiceAssistant.jsx"
 
 export default function Home() {
   const [
@@ -28,25 +27,6 @@ export default function Home() {
     if (summary) speakText(summary)
   }, [speakText, summary])
 
-  const handleVoiceQuery = useCallback(
-    async (q) => {
-      // Simple intent: "weather in X" or "Bangalore" => run search
-      // Previously used named groups (?<city>...), which can fail in some runtimes.
-      const m1 = /(?:weather|forecast|in)\s+([a-z\s-]+)$/i.exec(q || "")
-      const m2 = /^([a-z\s-]+)$/i.exec(q || "")
-      const city = (m1 && m1[1]) || (m2 && m2[1])
-      if (city) {
-        const normalized = city.trim()
-        if (normalized) {
-          await fetchWeather(normalized)
-          return `Searching weather for ${normalized}...`
-        }
-      }
-      return "You can say 'weather in Bangalore' or just a city name."
-    },
-    [fetchWeather],
-  )
-
   return (
     <main className="container">
       <header className="header">
@@ -57,7 +37,6 @@ export default function Home() {
             <p className="subtitle">Search city. Get insights. Plan your day.</p>
           </div>
         </div>
-        <VoiceAssistant onAsk={handleVoiceQuery} />
       </header>
 
       <div className="grid" style={{ gap: 16 }}>
@@ -114,7 +93,7 @@ export default function Home() {
       ) : null}
 
       <footer style={{ marginTop: 24 }}>
-        <p className="small">Data from Open‑Meteo. LLM text optional. Built for the “Weather Now” spec.</p>
+        <p className="small">Data from Open-Meteo.</p>
       </footer>
     </main>
   )
