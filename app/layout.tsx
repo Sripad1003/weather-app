@@ -1,6 +1,6 @@
 import type React from "react"
 import { Suspense } from "react"
-import "./globals.css" // Import globals.css at the top of the file
+import "../src/styles/global.css" // Import globals.css at the top of the file
 
 export default function RootLayout({
   children,

@@ -9,11 +9,6 @@ import WeatherDetails from "../components/WeatherDetails.jsx"
 import { useWeather } from "../hooks/useWeather.js"
 import Logo from "../components/Logo.jsx"
 import CityChat from "../components/CityChat.jsx"
-import AboutSection from "../components/AboutSection.jsx"
-import ContactSection from "../components/ContactSection.jsx"
-import AppFooter from "../components/AppFooter.jsx"
-import FeedbackWidget from "../components/FeedbackWidget.jsx"
-
 export default function Home() {
   const [
     { loading, location, current, daily, summary, forecastText, error, favorites, hourly, dailyDetail },
@@ -39,7 +34,7 @@ export default function Home() {
   const closeDetails = () => setShowDetails(false)
 
   return (
-    <main className="container" id="top">
+    <main className="container" id="top" aria-label="Weather Now home">
       <header className="header">
         <div className="brand">
           <Logo size={28} withText={false} title="Weather Now logo" />
@@ -130,22 +125,6 @@ export default function Home() {
         timezone={current?.timezone}
       />
 
-      {/* About Section */}
-      <AboutSection />
-
-      {/* Contact Section */}
-      <ContactSection />
-
-      {/* Feedback Widget */}
-      <FeedbackWidget />
-
-      {/* Attribution */}
-      <section className="section" aria-label="Attribution" style={{ marginTop: 16 }}>
-        <p className="small">Data from Open-Meteo.</p>
-      </section>
-
-      {/* App Footer */}
-      <AppFooter />
     </main>
   )
 }
