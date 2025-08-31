@@ -6,8 +6,8 @@ export default function ContactSection() {
       <ul className="mt-3 text-sm leading-6">
         <li>
           Email:{" "}
-          <a className="text-primary underline" href="mailto:contact@weathernow.app">
-            contact@weathernow.app
+          <a className="text-primary underline" href="mailto:chiliverysripad@gmail.com">
+            chiliverysripad@gmail.com
           </a>
         </li>
         <li>Feedback form: Scroll to the Feedback button in the bottom-right corner.</li>
