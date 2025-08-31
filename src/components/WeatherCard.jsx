@@ -1,6 +1,6 @@
 "use client"
 
-export default function WeatherCard({ location, current, onFavorite }) {
+export default function WeatherCard({ location, current, onFavorite, onDetails }) {
   if (!current) return null
   const locLine = [location?.name, location?.admin1, location?.country].filter(Boolean).join(", ")
 
@@ -16,11 +16,18 @@ export default function WeatherCard({ location, current, onFavorite }) {
             {locLine}
           </div>
         </div>
-        {onFavorite ? (
-          <button className="favorite-btn border-green-700" onClick={onFavorite} aria-label="Save city to favorites">
-            ★ Save
-          </button>
-        ) : null}
+        <div className="row">
+          {onFavorite ? (
+            <button className="favorite-btn border-green-700" onClick={onFavorite} aria-label="Save city to favorites">
+              ★ Save
+            </button>
+          ) : null}
+          {onDetails ? (
+            <button className="button ghost" onClick={onDetails} aria-label="View detailed weather">
+              View details
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className="grid" style={{ marginTop: 12, gap: 6 }}>

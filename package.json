@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ai-sdk/google": "latest",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
     "@radix-ui/react-aspect-ratio": "latest",
@@ -42,7 +41,6 @@
     "@sveltejs/kit": "latest",
     "@types/node": "latest",
     "@vercel/analytics": "latest",
-    "ai": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "latest",
@@ -74,8 +72,7 @@
     "vaul": "latest",
     "vue": "latest",
     "vue-router": "latest",
-    "yaml": "latest",
-    "zod": "latest"
+    "yaml": "latest"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

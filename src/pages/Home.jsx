@@ -1,15 +1,17 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import SearchBar from "../components/SearchBar.jsx"
 import WeatherCard from "../components/WeatherCard.jsx"
 import WeatherSummary from "../components/WeatherSummary.jsx"
 import ErrorMessage from "../components/ErrorMessage.jsx"
+import WeatherDetails from "../components/WeatherDetails.jsx"
 import { useWeather } from "../hooks/useWeather.js"
+import Logo from "../components/Logo.jsx"
 
 export default function Home() {
   const [
-    { loading, location, current, daily, summary, forecastText, error, favorites },
+    { loading, location, current, daily, summary, forecastText, error, favorites, hourly, dailyDetail },
     { fetchWeather, addFavorite, removeFavorite },
   ] = useWeather()
 
@@ -27,11 +29,15 @@ export default function Home() {
     if (summary) speakText(summary)
   }, [speakText, summary])
 
+  const [showDetails, setShowDetails] = useState(false)
+  const openDetails = () => setShowDetails(true)
+  const closeDetails = () => setShowDetails(false)
+
   return (
     <main className="container">
       <header className="header">
         <div className="brand">
-          <div className="logo" aria-hidden="true"></div>
+          <Logo size={28} withText={false} title="Weather Now logo" />
           <div>
             <h1 className="title">Weather Now</h1>
             <p className="subtitle">Search city. Get insights. Plan your day.</p>
@@ -82,7 +88,7 @@ export default function Home() {
       {/* Results */}
       {current ? (
         <section className="grid grid-2" style={{ marginTop: 16 }}>
-          <WeatherCard location={location} current={current} onFavorite={addFavorite} />
+          <WeatherCard location={location} current={current} onFavorite={addFavorite} onDetails={openDetails} />
           <WeatherSummary text={summary} onSpeak={handleSpeakSummary} />
         </section>
       ) : null}
@@ -96,6 +102,16 @@ export default function Home() {
           <pre style={{ marginTop: 10, whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{forecastText}</pre>
         </section>
       ) : null}
+
+      <WeatherDetails
+        open={showDetails}
+        onClose={closeDetails}
+        location={location}
+        current={current}
+        hourly={hourly}
+        daily={dailyDetail}
+        timezone={current?.timezone}
+      />
 
       <footer style={{ marginTop: 24 }}>
         <p className="small">Data from Open-Meteo.</p>

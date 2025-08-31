@@ -88,3 +88,37 @@ export async function get3DayForecast(lat, lon) {
   }))
   return list
 }
+
+export async function getHourlyDaily(lat, lon) {
+  const url = `${CONFIG.OPEN_METEO_BASE}/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,precipitation,dew_point_2m,cloud_cover,visibility,uv_index,wind_speed_10m,wind_gusts_10m&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_sum,uv_index_max,wind_speed_10m_max&wind_speed_unit=kmh&forecast_days=3&timezone=auto`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error("Network error during details fetch")
+  const data = await res.json()
+  return {
+    timezone: data.timezone,
+    hourly: {
+      time: data.hourly?.time || [],
+      temperature_2m: data.hourly?.temperature_2m || [],
+      relative_humidity_2m: data.hourly?.relative_humidity_2m || [],
+      apparent_temperature: data.hourly?.apparent_temperature || [],
+      precipitation_probability: data.hourly?.precipitation_probability || [],
+      precipitation: data.hourly?.precipitation || [],
+      dew_point_2m: data.hourly?.dew_point_2m || [],
+      cloud_cover: data.hourly?.cloud_cover || [],
+      visibility: data.hourly?.visibility || [],
+      uv_index: data.hourly?.uv_index || [],
+      wind_speed_10m: data.hourly?.wind_speed_10m || [],
+      wind_gusts_10m: data.hourly?.wind_gusts_10m || [],
+    },
+    daily: {
+      time: data.daily?.time || [],
+      temperature_2m_max: data.daily?.temperature_2m_max || [],
+      temperature_2m_min: data.daily?.temperature_2m_min || [],
+      sunrise: data.daily?.sunrise || [],
+      sunset: data.daily?.sunset || [],
+      precipitation_sum: data.daily?.precipitation_sum || [],
+      uv_index_max: data.daily?.uv_index_max || [],
+      wind_speed_10m_max: data.daily?.wind_speed_10m_max || [],
+    },
+  }
+}

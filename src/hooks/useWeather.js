@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { geocodeCity, getCurrentWeather, get3DayForecast } from "../api/weatherApi.js"
+import { geocodeCity, getCurrentWeather, get3DayForecast, getHourlyDaily } from "../api/weatherApi.js"
 import { summarizeWeather, forecastSummary } from "../api/llmApi.js"
 
 export function useWeather() {
@@ -14,6 +14,8 @@ export function useWeather() {
   const [error, setError] = useState("")
 
   const [favorites, setFavorites] = useState([])
+  const [hourly, setHourly] = useState(null)
+  const [dailyDetail, setDailyDetail] = useState(null)
 
   useEffect(() => {
     try {
@@ -103,12 +105,15 @@ export function useWeather() {
       }
 
       setLocation(geo)
-      const [cur, days] = await Promise.all([
+      const [cur, days, details] = await Promise.all([
         getCurrentWeather(geo.latitude, geo.longitude),
         get3DayForecast(geo.latitude, geo.longitude),
+        getHourlyDaily(geo.latitude, geo.longitude), // fetch details
       ])
       setCurrent(cur)
       setDaily(days)
+      setHourly(details.hourly)
+      setDailyDetail(details.daily)
 
       // Generate summaries (LLM or heuristic)
       const locLine = [geo.name, geo.admin1, geo.country].filter(Boolean).join(", ")
@@ -139,8 +144,10 @@ export function useWeather() {
       forecastText,
       error,
       favorites,
+      hourly,
+      dailyDetail,
     }),
-    [loading, location, current, daily, summary, forecastText, error, favorites],
+    [loading, location, current, daily, summary, forecastText, error, favorites, hourly, dailyDetail],
   )
 
   const actions = useMemo(
